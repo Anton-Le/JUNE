@@ -1,13 +1,13 @@
 import logging
 
 import numpy as np
-from random import shuffle
 import yaml
 from typing import List, Optional
 
 from june import paths
 from june.geography import SuperAreas, SuperArea
 from june.groups import Hospitals
+from june.utils.rng import rng
 
 from typing import TYPE_CHECKING
 
@@ -83,7 +83,7 @@ class HospitalDistributor:
             list of Persons in the world
         """
         medics = [person for person in people if person.age >= self.medic_min_age]
-        shuffle(medics)
+        rng.shuffle(medics)
         for hospital in self.hospitals:
             max_capacity = hospital.n_beds + hospital.n_icu_beds
             if max_capacity == 0:
@@ -149,7 +149,7 @@ class HospitalDistributor:
             )
             return
         else:
-            shuffle(medics)
+            rng.shuffle(medics)
             for hospital in hospitals_in_super_area:
                 max_capacity = hospital.n_beds + hospital.n_icu_beds
                 if max_capacity == 0:

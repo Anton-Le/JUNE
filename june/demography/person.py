@@ -1,8 +1,8 @@
 from itertools import count
-from random import choice
 from recordclass import dataobject
 
 from june.epidemiology.infection import Infection, Immunity
+from june.utils.rng import rng
 
 from typing import TYPE_CHECKING
 
@@ -144,7 +144,7 @@ class Person(dataobject):
         possible_guardians = [person for person in self.housemates if person.age >= 18]
         if not possible_guardians:
             return None
-        guardian = choice(possible_guardians)
+        guardian = rng.choice(possible_guardians)
         if (
             guardian.infection is not None and guardian.infection.should_be_in_hospital
         ) or guardian.dead:

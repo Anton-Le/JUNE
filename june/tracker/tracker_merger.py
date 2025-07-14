@@ -8,6 +8,8 @@ from june.tracker.tracker import Tracker
 from june.tracker.tracker_plots import PlotClass
 
 from june.mpi_setup import mpi_comm, mpi_size, mpi_rank
+from june.utils.rng import rng
+
 import logging
 
 logger = logging.getLogger("tracker merger")
@@ -349,7 +351,7 @@ class MergerClass:
         return 1
 
     def VenueUniquePops(self):
-        np.random.seed(1234)
+        rng.seed(1234)
         location_counters = {}
         for sex in self.contact_sexes:
             location_counters[sex] = {}
@@ -384,7 +386,7 @@ class MergerClass:
                     else:
                         Pick = NVenues_rank_loc
 
-                    rands = np.random.choice(
+                    rands = rng.choice(
                         np.arange(1, NVenues_rank_loc + 1, 1), size=Pick, replace=False
                     )
                     if plural_loc not in location_counters[sex].keys():
@@ -410,7 +412,7 @@ class MergerClass:
                     df = pd.DataFrame(location_counters[sex][local])
                     df.to_excel(writer, sheet_name=f"{local}")
 
-        np.random.seed(1234)
+        rng.seed(1234)
         location_counters = {}
         for sex in self.contact_sexes:
             location_counters[sex] = {}
@@ -445,7 +447,7 @@ class MergerClass:
                     else:
                         Pick = NVenues_rank_loc
 
-                    rands = np.random.choice(
+                    rands = rng.choice(
                         np.arange(1, NVenues_rank_loc + 1, 1), size=Pick, replace=False
                     )
                     if plural_loc not in location_counters[sex].keys():

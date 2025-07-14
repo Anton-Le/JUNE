@@ -1,7 +1,6 @@
 from typing import List
 import numpy as np
 import logging
-from random import randint
 from sklearn.neighbors import BallTree
 from itertools import count
 
@@ -9,6 +8,7 @@ from june.paths import data_path
 from june.geography import City, SuperAreas, SuperArea
 from june.groups import Supergroup, ExternalGroup, ExternalSubgroup
 from june.utils.distances import add_distance_to_lat_lon
+from june.utils.rng import rng
 
 default_super_stations_filename = (
     data_path / "input/geography/stations_per_super_area_ew.csv"
@@ -50,7 +50,7 @@ class CityStation(Station):
         return len(self.city_transports)
 
     def get_commute_subgroup(self):
-        return self.city_transports[randint(0, self.n_city_transports - 1)][0]
+        return self.city_transports[rng.integers(0, self.n_city_transports )][0]
 
     @property
     def station_type(self):
@@ -71,7 +71,7 @@ class InterCityStation(Station):
         return len(self.inter_city_transports)
 
     def get_commute_subgroup(self):
-        return self.inter_city_transports[randint(0, self.n_inter_city_transports - 1)][
+        return self.inter_city_transports[rng.integers(0, self.n_inter_city_transports )][
             0
         ]
 
@@ -180,7 +180,7 @@ class ExternalCityStation(ExternalStation):
         return len(self.city_transports)
 
     def get_commute_subgroup(self):
-        group = self.city_transports[randint(0, self.n_city_transports - 1)]
+        group = self.city_transports[rng.integers(0, self.n_city_transports )]
         return ExternalSubgroup(group=group, subgroup_type=0)
 
 
@@ -198,5 +198,5 @@ class ExternalInterCityStation(ExternalStation):
         return len(self.inter_city_transports)
 
     def get_commute_subgroup(self):
-        group = self.inter_city_transports[randint(0, self.n_inter_city_transports - 1)]
+        group = self.inter_city_transports[rng.integers(0, self.n_inter_city_transports )]
         return ExternalSubgroup(group=group, subgroup_type=0)

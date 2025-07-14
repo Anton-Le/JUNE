@@ -7,6 +7,7 @@ import yaml
 from june import paths
 from june.geography import Area, SuperArea, Geography
 from june.groups.school import Schools
+from june.utils.rng import rng
 
 default_config_filename = (
     paths.configs_path / "defaults/distributors/school_distributor.yaml"
@@ -156,12 +157,12 @@ class SchoolDistributor:
                 if person.age not in is_school_full:
                     continue
                 if is_school_full[person.age]:
-                    random_number = np.random.randint(
+                    random_number = rng.integers(
                         0,
                         min(
                             len(closest_schools_by_age[person.age]),
                             self.neighbour_schools,
-                        ),
+                        ) ,
                     )
                     school = closest_schools_by_age[person.age][random_number]
                 else:
@@ -176,12 +177,12 @@ class SchoolDistributor:
                             break
 
                         is_school_full[person.age] = True
-                        random_number = np.random.randint(
+                        random_number = rng.integers(
                             0,
                             min(
                                 len(closest_schools_by_age[person.age]),
                                 self.neighbour_schools,
-                            ),
+                            ) ,
                         )
                         school = closest_schools_by_age[person.age][random_number]
                     else:  # just keep the school saved in the previous for loop
@@ -257,7 +258,7 @@ class SchoolDistributor:
                     continue
                 # note one school can be primary and secondary.
                 if type(school.sector) != str:
-                    idx = np.random.randint(0, 2)
+                    idx = rng.integers(0, 2 + 1)
                     if idx == 0:
                         primary_schools.append(school)
                     else:
@@ -265,7 +266,7 @@ class SchoolDistributor:
                 else:
                     if "primary" in school.sector:
                         if "secondary" in school.sector:
-                            idx = np.random.randint(0, 2)
+                            idx = rng.integers(0, 2 + 1)
                             if idx == 0:
                                 primary_schools.append(school)
                             else:
@@ -275,7 +276,7 @@ class SchoolDistributor:
                     elif "secondary" in school.sector:
                         secondary_schools.append(school)
                     else:
-                        idx = np.random.randint(0, 2)
+                        idx = rng.integers(0, 2 + 1)
                         if idx == 0:
                             primary_schools.append(school)
                         else:
@@ -285,19 +286,19 @@ class SchoolDistributor:
             school.n_teachers_max = int(
                 np.round(
                     school.n_pupils
-                    / np.random.poisson(self.teacher_student_ratio_primary)
+                    / rng.poisson(self.teacher_student_ratio_primary)
                 )
             )
         for school in secondary_schools:
             school.n_teachers_max = int(
                 np.round(
                     school.n_pupils
-                    / np.random.poisson(self.teacher_student_ratio_secondary)
+                    / rng.poisson(self.teacher_student_ratio_secondary)
                 )
             )
 
-        np.random.shuffle(primary_schools)
-        np.random.shuffle(secondary_schools)
+        rng.shuffle(primary_schools)
+        rng.shuffle(secondary_schools)
         all_teachers = [
             person
             for person in super_area.workers
@@ -315,9 +316,9 @@ class SchoolDistributor:
                 secondary_teachers.append(teacher)
             else:
                 extra_teachers.append(teacher)
-        np.random.shuffle(primary_teachers)
-        np.random.shuffle(secondary_teachers)
-        np.random.shuffle(extra_teachers)
+        rng.shuffle(primary_teachers)
+        rng.shuffle(secondary_teachers)
+        rng.shuffle(extra_teachers)
         while primary_teachers:
             all_filled = True
             for primary_school in primary_schools:

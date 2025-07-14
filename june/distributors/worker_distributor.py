@@ -3,7 +3,6 @@ from itertools import count
 from typing import List, Dict, Optional
 
 import numpy as np
-from random import randint
 import pandas as pd
 import yaml
 from scipy.stats import rv_discrete
@@ -12,6 +11,7 @@ from june import paths
 from june.demography import Person, Population
 from june.geography import Geography, Areas, SuperAreas
 from june.utils import random_choice_numba
+from june.utils.rng import rng
 
 from typing import TYPE_CHECKING
 
@@ -207,7 +207,7 @@ class WorkerDistributor:
         """
         Selects random SuperArea to send a worker to work in
         """
-        idx = randint(0, len(self.super_areas) - 1)
+        idx = rng.integers(0, len(self.super_areas) )
         self.super_areas.members[idx].add_worker(person)
 
     def _assign_work_sector(self, i: int, person: Person):
@@ -227,7 +227,7 @@ class WorkerDistributor:
         """
         Assign sub-sector job as defined in config
         """
-        MC_random = np.random.uniform()
+        MC_random = rng.uniform()
         ratio = self.sub_sector_ratio[person.sector][person.sex]
         distr = self.sub_sector_distr[person.sector][person.sex]
         if MC_random < ratio:
@@ -241,7 +241,7 @@ class WorkerDistributor:
         Creates run-once random list for each person in an area for assigning to a lockdown status
         """
 
-        self.lockdown_status_random = np.random.choice(2, n_workers, p=[4 / 5, 1 / 5])
+        self.lockdown_status_random = rng.choice(2, n_workers, p=[4 / 5, 1 / 5])
 
     def _parse_closure_probabilities_by_sector(
         self, company_closure: dict, lockdown_tags: List

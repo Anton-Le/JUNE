@@ -1,6 +1,7 @@
 from typing import Union, Dict
 import datetime
-from random import sample, choices
+
+from june.utils.rng import rng
 
 from .event import Event
 
@@ -34,13 +35,13 @@ class IncidenceSetter(Event):
                 incidence = len(infected_people) / len(people)
                 if incidence > target_incidence:
                     n_to_remove = int((incidence - target_incidence) * len(people))
-                    to_cure = sample(infected_people, n_to_remove)
+                    to_cure = rng.choice(infected_people, size=n_to_remove, replace=False)
                     for person in to_cure:
                         person.infection = None
                 elif incidence < target_incidence:
                     n_to_add = int((target_incidence - incidence) * len(people))
-                    to_infect = sample(people, k=2 * n_to_add)
-                    infected = choices(infected_people, k=2 * n_to_add)
+                    to_infect = rng.choice(people, size=2 * n_to_add, replace=False)
+                    infected = rng.choice(infected_people, size=2 * n_to_add, replace=False)
                     counter = 0
                     for person, infected_ref in zip(to_infect, infected):
                         if person.infected:

@@ -2,7 +2,8 @@ from typing import Optional
 from collections import Counter
 import numpy as np
 import yaml
-from random import random
+
+from june.utils.rng import rng
 
 from june.utils import (
     parse_age_probabilities,
@@ -296,7 +297,7 @@ class ImmunitySetter:
                 if person.age >= len(self.susceptibility_dict[inf_id]):
                     continue
                 fraction = self.susceptibility_dict[inf_id][person.age]
-                if random() > fraction:
+                if rng.random() > fraction:
                     person.immunity.susceptibility_dict[inf_id] = 0.0
 
     def set_vaccinations(self, population):
@@ -320,9 +321,9 @@ class ImmunitySetter:
                 ]
             )
             total_vacc_rate = np.sum(vaccination_rates)
-            if random() < total_vacc_rate:
+            if rng.random() < total_vacc_rate:
                 vaccination_rates /= total_vacc_rate
-                vaccine = np.random.choice(vaccines, p=vaccination_rates)
+                vaccine = rng.choice(vaccines, p=vaccination_rates)
                 vdata = self.vaccination_dict[vaccine]
                 for inf_id, inf_data in vdata["infections"].items():
                     person.immunity.add_multiplier(
@@ -362,7 +363,7 @@ class ImmunitySetter:
             ratio = self.previous_infections_dict["ratios"][person.region.name][
                 person.age
             ]
-            if random() < ratio:
+            if rng.random() < ratio:
                 for inf_id, inf_data in self.previous_infections_dict[
                     "infections"
                 ].items():
@@ -414,7 +415,7 @@ class ImmunitySetter:
             cum_scores = np.cumsum(scores)
             prev_inf_households = set()
             while total_to_infect > 0:
-                num = random() * cum_scores[-1]
+                num = rng.random() * cum_scores[-1]
                 idx = np.searchsorted(cum_scores, num)
                 household = households[idx]
                 if household.id in prev_inf_households:

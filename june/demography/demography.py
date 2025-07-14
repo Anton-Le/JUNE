@@ -7,6 +7,7 @@ from june import paths
 from june.demography import Person
 from june.geography import Geography
 from june.utils import random_choice_numba
+from june.utils.rng import rng
 
 default_data_path = paths.data_path / "input/demography"
 
@@ -69,7 +70,7 @@ class AgeSexGenerator:
         ages = np.repeat(np.arange(0, len(age_counts)), age_counts)
         female_fraction_bins = np.digitize(ages, bins=list(map(int, sex_bins))) - 1
         sexes = (
-            np.random.uniform(0, 1, size=self.n_residents)
+            rng.uniform(0, 1, size=self.n_residents)
             < np.array(female_fractions)[female_fraction_bins]
         ).astype(int)
         sexes = map(lambda x: ["m", "f"][x], sexes)
@@ -84,7 +85,7 @@ class AgeSexGenerator:
             ethnicities = []
             for age_ind, age_count in enumerate(ethnicity_age_counts):
                 ethnicities.extend(
-                    np.random.choice(
+                    rng.choice(
                         np.repeat(ethnicity_groups, ethnicity_structure[age_ind]),
                         age_count,
                     )
@@ -117,13 +118,13 @@ class AgeSexGenerator:
             if age2 == 99:
                 exp_values = np.exp(-np.arange(0, age2 - age1 + 1) / exponential_decay)
                 p = exp_values / exp_values.sum()
-                age_dist = np.random.choice(
+                age_dist = rng.choice(
                     np.arange(age1, age2 + 1), size=total_people, p=p
                 )
                 ages, counts = np.unique(age_dist, return_counts=True)
                 age_counts[ages] += counts
             else:
-                age_dist = np.random.choice(
+                age_dist = rng.choice(
                     np.arange(age1, age2 + 1), size=total_people
                 )
                 ages, counts = np.unique(age_dist, return_counts=True)

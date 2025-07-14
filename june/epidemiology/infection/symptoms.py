@@ -1,8 +1,8 @@
-from random import random
-
 import numpy as np
 from .symptom_tag import SymptomTag
 from .trajectory_maker import TrajectoryMakers
+
+from june.utils.rng import rng
 
 dead_tags = (SymptomTag.dead_home, SymptomTag.dead_hospital, SymptomTag.dead_icu)
 
@@ -27,7 +27,7 @@ class Symptoms:
     def __init__(self, health_index=None):
         self.max_tag = None
         self.tag = SymptomTag.exposed
-        self.max_severity = random()
+        self.max_severity = rng.random()
         self.trajectory = self._make_symptom_trajectory(
             health_index
         )  # this also sets max_tag

@@ -1,7 +1,6 @@
 import numpy as np
 import yaml
 import logging
-from random import random
 from typing import Dict
 from june.demography import Person
 from june.geography import SuperAreas, Areas, Regions, Region
@@ -16,7 +15,7 @@ from june.groups.leisure import (
 from june.utils import random_choice_numba
 from june import paths
 from june.utils.parse_probabilities import parse_opens
-
+from june.utils.rng import rng
 
 default_config_filename = paths.configs_path / "config_example.yaml"
 
@@ -216,7 +215,7 @@ class Leisure:
             person.age = age_before
             return
         prob_age_sex = self._get_activity_probabilities_for_person(person=person)
-        if random() < prob_age_sex["does_activity"]:
+        if rng.random() < prob_age_sex["does_activity"]:
             activity_idx = random_choice_numba(
                 arr=np.arange(0, len(prob_age_sex["activities"])),
                 prob=np.array(list(prob_age_sex["activities"].values())),
@@ -389,7 +388,7 @@ class Leisure:
                 prob = self.probabilities_by_region_sex_age[
                     list(self.probabilities_by_region_sex_age.keys())[0]
                 ][person.sex][person.age]["drags_household"][activity]
-        return random() < prob
+        return rng.random() < prob
 
     # TESTING TODO
     ######################################################################
@@ -410,7 +409,7 @@ class Leisure:
         return 1 - self.P_IsAdult(age)
 
     def AorC(self, age):
-        r = np.random.rand(1)[0]
+        r = rng.random() #  TODO: Fix
         if r < self.P_IsAdult(age):
             return "Adult"
         else:

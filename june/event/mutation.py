@@ -1,8 +1,8 @@
 import datetime
 from typing import Union, Dict
-from random import random
 
 from june.epidemiology.infection import B117
+from june.utils.rng import rng
 from .event import Event
 
 
@@ -52,7 +52,7 @@ class Mutation(Event):
         for person in world.people:
             if person.infected:
                 probability = self.regional_probabilities.get(person.region.name, 0)
-                if random() < probability:
+                if rng.random() < probability:
                     new_infection = selector._make_infection(
                         person, time=person.infection.start_time
                     )

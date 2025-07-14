@@ -1,5 +1,4 @@
 import numpy as np
-from random import random, sample, randint
 from numba import jit
 from typing import Dict
 import yaml
@@ -8,14 +7,14 @@ import re
 from june.groups.leisure import SocialVenues
 from june.utils.parse_probabilities import parse_age_probabilities
 from june.geography import Area
-
+from june.utils.rng import rng
 
 @jit(nopython=True)
 def random_choice_numba(arr, prob):
     """
     Fast implementation of np.random.choice
     """
-    return arr[np.searchsorted(np.cumsum(prob), random(), side="right")]
+    return arr[np.searchsorted(np.cumsum(prob), rng.random(), side="right")]
 
 
 default_daytypes = {
@@ -234,7 +233,7 @@ class SocialVenueDistributor:
             return tuple([potential_venues[idx] for idx in range(indices_len)])
         else:
             indices_len = min(len(potential_venues), self.neighbours_to_consider)
-            random_idx_choice = sample(range(len(potential_venues)), indices_len)
+            random_idx_choice = rng.choice(range(len(potential_venues)), size=indices_len, replace=False)
             return tuple([potential_venues[idx] for idx in random_idx_choice])
 
     def get_leisure_group(self, person):
@@ -245,7 +244,7 @@ class SocialVenueDistributor:
         elif n_candidates == 1:
             group = candidates[0]
         else:
-            group = candidates[randint(0, n_candidates - 1)]
+            group = candidates[rng.integers(0, n_candidates )]
         return group
 
     def get_leisure_subgroup(self, person, to_send_abroad=None):
@@ -264,7 +263,7 @@ class SocialVenueDistributor:
         """
         Check whether person drags household or not.
         """
-        return random() < self.drags_household_probability
+        return rng.random() < self.drags_household_probability
 
     def send_household_with_person_if_necessary(self, person, to_send_abroad=None):
         """

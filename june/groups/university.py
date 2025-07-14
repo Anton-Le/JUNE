@@ -1,13 +1,12 @@
 import numpy as np
 import pandas as pd
-from random import randint
 from typing import List
 import logging
 
 from june.groups import Group, Subgroup, Supergroup
 from june.geography import Areas, Geography
 from june.paths import data_path
-
+from june.utils.rng import rng
 age_to_years = {19: 0, 20: 1, 21: 2, 22: 3, 23: 4}
 
 default_universities_filename = data_path / "input/universities/uk_universities.csv"
@@ -42,7 +41,7 @@ class University(Group):
     def add(self, person, subgroup="student"):
         if subgroup == "student":
             if person.age not in age_to_years:
-                year = randint(0, len(self.subgroups) - 1)
+                year = rng.integers(0, len(self.subgroups) )
             else:
                 year = age_to_years[person.age]
             self.subgroups[year].append(person)

@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
-from random import random
 from collections import defaultdict
 
 from .infection_seed import InfectionSeed
 from june.epidemiology.infection import InfectionSelector
+from june.utils.rng import rng
 
 from typing import TYPE_CHECKING
 
@@ -42,7 +42,7 @@ class ClusteredInfectionSeed(InfectionSeed):
             ]
         )
         ret = int(total)
-        ret += int(random() < (total - ret))
+        ret += int(rng.random() < (total - ret))
         return ret
 
     def get_household_score(self, household, age_distribution):
@@ -69,7 +69,7 @@ class ClusteredInfectionSeed(InfectionSeed):
         cum_scores = np.cumsum(scores)
         seeded_households = set()
         while total_to_infect > 0:
-            num = random() * cum_scores[-1]
+            num = rng.random() * cum_scores[-1]
             idx = np.searchsorted(cum_scores, num)
             household = households[idx]
             if household.id in seeded_households:

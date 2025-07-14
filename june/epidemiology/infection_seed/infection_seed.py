@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from random import random
 import datetime
 import logging
 from collections import defaultdict
@@ -10,6 +9,7 @@ from june.records import Record
 from june.epidemiology.infection import InfectionSelector
 from june.epidemiology.epidemiology import Epidemiology
 from june.utils import parse_age_probabilities
+from june.utils.rng import rng
 
 from typing import TYPE_CHECKING
 
@@ -190,7 +190,7 @@ class InfectionSeed:
             rescaling = n_people_by_age[age] / len(susceptible_people_by_age[age])
             for person in susceptible:
                 prob = cases_per_capita_per_age.loc[age] * rescaling
-                if random() < prob:
+                if rng.random() < prob:
                     self.infect_person(person=person, time=time, record=record)
                     self.current_seeded_cases[super_area.region.name] += 1
                     if time < 0:

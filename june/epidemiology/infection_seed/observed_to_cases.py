@@ -10,6 +10,7 @@ from june import paths
 from june.demography import Person
 from june.epidemiology.infection.symptom_tag import SymptomTag
 from june.epidemiology.infection.trajectory_maker import TrajectoryMaker
+from june.utils.rng import rng
 
 from typing import TYPE_CHECKING
 
@@ -453,7 +454,7 @@ class Observed2Cases:
                 super_area_weights["region"] == region
             ]
             for date, n_cases in n_cases_per_region_df[region].iteritems():
-                chosen_super_areas = np.random.choice(
+                chosen_super_areas = rng.choice(
                     list(super_area_weights_for_region.index),
                     replace=True,
                     size=round(n_cases),

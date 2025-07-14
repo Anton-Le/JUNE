@@ -1,10 +1,10 @@
 from enum import IntEnum
 from collections import defaultdict
 import numpy as np
-from random import random
 
 from june.groups import Group, Supergroup
 from june.groups.group.interactive import InteractiveGroup
+from june.utils.rng import rng
 
 from typing import List
 
@@ -158,7 +158,7 @@ class Household(Group):
                 < time
                 < self.quarantine_starting_date + quarantine_days
             ):
-                return random() < household_compliance
+                return rng.random() < household_compliance
         return False
 
     @property

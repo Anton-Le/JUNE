@@ -1,6 +1,5 @@
 import logging
 from enum import IntEnum
-from random import shuffle
 from june import paths
 from typing import List
 import yaml
@@ -11,6 +10,7 @@ import pandas as pd
 from june.geography import Geography, SuperArea
 from june.groups import Group, Supergroup
 from june.groups.group.interactive import InteractiveGroup
+from june.utils.rng import rng
 
 default_size_nr_file = paths.data_path / "input/companies/company_size_2011.csv"
 default_sector_nr_per_msoa_file = (
@@ -197,13 +197,13 @@ class Companies(Supergroup):
         for size_bracket, counts in company_sizes.items():
             size_min, size_max = _get_size_brackets(size_bracket)
             sizes = np.concatenate(
-                (sizes, np.random.randint(max(size_min, 1), size_max, int(counts)))
+                (sizes, rng.integers(max(size_min, 1), size_max+1, int(counts)))
             )
-        np.random.shuffle(sizes)
+        rng.shuffle(sizes)
         sectors = []
         for sector, counts in company_sectors.items():
             sectors += [sector] * int(counts)
-        shuffle(sectors)
+        rng.shuffle(sectors)
         companies = list(
             map(
                 lambda company_size, company_sector: cls.create_company(

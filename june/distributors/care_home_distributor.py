@@ -1,6 +1,5 @@
 import logging
 import yaml
-from random import shuffle, randint
 from collections import OrderedDict, defaultdict
 
 import numpy as np
@@ -8,7 +7,7 @@ import pandas as pd
 
 from june import paths
 from june.geography import Area, SuperAreas
-
+from june.utils.rng import rng
 
 logger = logging.getLogger("care_home_distributor")
 
@@ -87,7 +86,7 @@ class CareHomeDistributor:
             available_people += people_by_age[age]
         if not available_people:
             return None
-        chosen_person_idx = randint(0, len(available_people) - 1)
+        chosen_person_idx = rng.integers(0, len(available_people) )
         chosen_person = available_people[chosen_person_idx]
         people_by_age[chosen_person.age].remove(chosen_person)
         if not people_by_age[chosen_person.age]:
@@ -129,7 +128,7 @@ class CareHomeDistributor:
             ]
             # now we need to choose from each area population which people go to the care home based on
             # the super area statistics. Check who goes first.
-            shuffle(areas_with_care_homes)
+            rng.shuffle(areas_with_care_homes)
             areas_dicts = [
                 self._create_people_dicts(area) for area in areas_with_care_homes
             ]
@@ -199,7 +198,7 @@ class CareHomeDistributor:
                     and person.sub_sector is None
                 )
             ]
-            shuffle(carers)
+            rng.shuffle(carers)
             for care_home in care_homes:
                 while len(care_home.workers) < care_home.n_workers:
                     try:

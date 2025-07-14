@@ -1,14 +1,13 @@
 import numpy as np
 from typing import List, Optional, Union
 import datetime
-from random import random
 
 from june.epidemiology.infection import SymptomTag
 from june.demography.person import Person
 from june.policy import Policy, PolicyCollection
 from june.mpi_setup import mpi_size
 from june.utils.distances import haversine_distance
-
+from june.utils.rng import rng
 
 class IndividualPolicy(Policy):
     def __init__(
@@ -174,7 +173,7 @@ class Quarantine(StayHome):
                 if person.symptoms.tag in (SymptomTag.mild, SymptomTag.severe):
                     release_day = time_of_symptoms_onset + self.n_days
                     if 0 < release_day - days_from_start < self.n_days:
-                        if random() < self.compliance * regional_compliance:
+                        if rng.random() < self.compliance * regional_compliance:
                             return True
 
         if (person.vaccinated and person.vaccine_trajectory is None) or person.age < 18:
@@ -278,7 +277,7 @@ class SchoolQuarantine(StayHome):
             < (days_from_start - person.primary_activity.quarantine_starting_date)
             < self.n_days
         ):
-            return random() < compliance
+            return rng.random() < compliance
         return False
 
 
@@ -302,7 +301,7 @@ class Shielding(StayHome):
         if person.age >= self.min_age:
             if (
                 self.compliance is None
-                or random() < self.compliance * regional_compliance
+                or rng.random() < self.compliance * regional_compliance
             ):
                 return True
         return False
@@ -392,7 +391,7 @@ class CloseSchools(SkipActivity):
                     if self.years_to_close and person.age in self.years_to_close:
                         return True
                     else:
-                        if random() > self.attending_compliance:
+                        if rng.random() > self.attending_compliance:
                             return True
         except AttributeError:
             return False
@@ -446,7 +445,7 @@ class CloseCompaniesLockdownTiers(SkipActivity):
                         not in CloseCompaniesLockdownTiers.TIERS
                     ):
                         try:
-                            return random() < person.region.regional_compliance
+                            return rng.random() < person.region.regional_compliance
                         except Exception:
                             return True
                 except AttributeError:
@@ -462,7 +461,7 @@ class CloseCompaniesLockdownTiers(SkipActivity):
                         in CloseCompaniesLockdownTiers.TIERS
                     ):
                         try:
-                            return random() < person.region.regional_compliance
+                            return rng.random() < person.region.regional_compliance
                         except Exception:
                             return True
                 except AttributeError:
@@ -540,11 +539,11 @@ class CloseCompanies(SkipActivity):
                         return True
                     # if there are too many or correct number of furloughed people then furlough with a probability
                     elif self.furlough_ratio >= self.furlough_probability:
-                        if random() < self.furlough_probability / self.furlough_ratio:
+                        if rng.random() < self.furlough_probability / self.furlough_ratio:
                             return True
                         # otherwise treat them as random
                         elif self.avoid_work_probability is not None:
-                            if random() < self.avoid_work_probability:
+                            if rng.random() < self.avoid_work_probability:
                                 return True
                 else:
                     return True
@@ -556,7 +555,7 @@ class CloseCompanies(SkipActivity):
             ):
                 # if there are too many key workers, scale them down - otherwise send all to work
                 if self.key_ratio > self.key_probability:
-                    if random() > self.key_probability / self.key_ratio:
+                    if rng.random() > self.key_probability / self.key_ratio:
                         return True
 
             elif (
@@ -577,13 +576,13 @@ class CloseCompanies(SkipActivity):
                         and self.key_ratio < self.key_probability
                     ):
                         if (
-                            random()
+                            rng.random()
                             < (self.furlough_probability - self.furlough_ratio)
                             / self.random_ratio
                         ):
                             return True
                         # correct for some random workers now being treated as furloughed
-                        elif random() < (self.key_probability - self.key_ratio) / (
+                        elif rng.random() < (self.key_probability - self.key_ratio) / (
                             self.random_ratio
                             - (self.furlough_probability - self.furlough_ratio)
                         ):
@@ -591,7 +590,7 @@ class CloseCompanies(SkipActivity):
                     # if there are too few furloughed people
                     elif self.furlough_ratio < self.furlough_probability:
                         if (
-                            random()
+                            rng.random()
                             < (self.furlough_probability - self.furlough_ratio)
                             / self.random_ratio
                         ):
@@ -599,7 +598,7 @@ class CloseCompanies(SkipActivity):
                     # if there are too few kew workers
                     elif self.key_ratio < self.key_probability:
                         if (
-                            random()
+                            rng.random()
                             < (self.key_probability - self.key_ratio)
                             / self.random_ratio
                         ):
@@ -613,7 +612,7 @@ class CloseCompanies(SkipActivity):
                     # if there are too few furloughed people then randomly stop extra people from going to work
                     if self.furlough_ratio < self.furlough_probability:
                         if (
-                            random()
+                            rng.random()
                             < (self.furlough_probability - self.furlough_ratio)
                             / self.random_ratio
                         ):
@@ -627,13 +626,13 @@ class CloseCompanies(SkipActivity):
                     # if there are too few key workers then randomly boost more people going to work and do not subject them to the random choice
                     if self.key_ratio < self.key_probability:
                         if (
-                            random()
+                            rng.random()
                             < (self.key_probability - self.key_ratio)
                             / self.random_ratio
                         ):
                             return False
 
-                if random() < self.avoid_work_probability:
+                if rng.random() < self.avoid_work_probability:
                     return True
 
         return False
@@ -687,7 +686,7 @@ class LimitLongCommute(SkipActivity):
         if person.id not in self.long_distance_commuter_ids:
             return False
         else:
-            if random() < self.going_to_work_probability:
+            if rng.random() < self.going_to_work_probability:
                 return True
             else:
                 return False

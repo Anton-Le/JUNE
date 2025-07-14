@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 from june import paths
+from june.utils.rng import rng
 
 default_super_area_to_region_file = (
     paths.data_path / "input/geography/area_super_area_region.csv"
@@ -100,7 +101,7 @@ class CasesDistributor:
                 weights = weights_per_super_area.loc[
                     region_super_areas
                 ].values.flatten()
-                cases_distributed = np.random.choice(
+                cases_distributed = rng.choice(
                     region_super_areas, size=n_cases, p=weights, replace=True
                 )
                 super_areas, cases = np.unique(cases_distributed, return_counts=True)
@@ -139,7 +140,7 @@ class CasesDistributor:
         )
         for date, n_cases in cases_per_day.iterrows():
             weights = weights_per_super_area.values.flatten()
-            cases_distributed = np.random.choice(
+            cases_distributed = rng.choice(
                 list(weights_per_super_area.index),
                 size=n_cases.values[0],
                 p=weights,

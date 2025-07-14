@@ -1,10 +1,10 @@
 from typing import Dict, Union
-from random import random, shuffle
 import logging
 import datetime
 
 from .event import Event
 from june.utils import parse_age_probabilities
+from june.utils.rng import rng
 
 logger = logging.getLogger("domestic_care")
 
@@ -63,7 +63,7 @@ class DomesticCare(Event):
             if household.household_to_care is not None:
                 household_to_care = household.household_to_care
                 carers = list(household.residents)
-                shuffle(carers)
+                rng.shuffle(carers)
                 receives_care = False
                 for person in carers:
                     if person.age > 18 and person.available:
@@ -93,8 +93,8 @@ class DomesticCare(Event):
                         need_care.append(household)
                     if self._check_household_can_provide_care(household):
                         can_provide_care.append(household)
-            shuffle(need_care)
-            shuffle(can_provide_care)
+            rng.shuffle(need_care)
+            rng.shuffle(can_provide_care)
             if len(need_care) > len(can_provide_care):
                 logger.warning(
                     f"super area {super_area.id} does not" f"have enough carers"
@@ -112,7 +112,7 @@ class DomesticCare(Event):
         if household.type == "old":
             for person in household.residents:
                 care_probability = self.needs_care_probabilities[person.age]
-                if random() < care_probability:
+                if rng.random() < care_probability:
                     return True
         return False
 

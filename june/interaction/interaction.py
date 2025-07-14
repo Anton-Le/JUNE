@@ -1,12 +1,12 @@
 import numpy as np
 import yaml
-from random import random
 from typing import List, Dict
 
 from june.groups.group.interactive import InteractiveGroup
 from june.groups import InteractiveSchool
 from june.records import Record
 from june import paths
+from june.utils.rng import rng
 
 default_config_filename = paths.configs_path / "defaults/interaction/interaction.yaml"
 
@@ -248,16 +248,16 @@ class Interaction:
 
     def _gets_infected(self, infection_transmission_parameters, infection_ids):
         total_exp = infection_transmission_parameters.sum()
-        if random() < 1 - np.exp(-total_exp):
+        if rng.random() < 1 - np.exp(-total_exp):
             if len(infection_ids) == 1:
                 return infection_ids[0]
-            return np.random.choice(
+            return rng.choice(
                 infection_ids, p=infection_transmission_parameters / total_exp
             )
 
     def _blame_subgroup(self, vector):
         probs = vector / vector.sum()
-        return np.random.choice(len(vector), p=probs)
+        return rng.choice(len(vector), p=probs)
 
     def _blame_individuals(
         self, to_blame_subgroups, infection_ids, infectors_per_infection_per_subgroup
@@ -273,7 +273,7 @@ class Interaction:
                 ]
             )
             candidates_probs /= candidates_probs.sum()
-            ret.append(np.random.choice(candidates_ids, p=candidates_probs))
+            ret.append( rng.choice(candidates_ids, p=candidates_probs))
         return ret
 
     def _log_infections_to_record(

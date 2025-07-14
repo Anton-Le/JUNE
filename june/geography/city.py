@@ -1,7 +1,6 @@
 import pandas as pd
 from typing import List
 import numpy as np
-from random import randint
 from sklearn.neighbors import BallTree
 from itertools import count
 import logging
@@ -10,6 +9,7 @@ from june.paths import data_path
 from june.geography import SuperArea, Geography
 from june.groups.group import Supergroup
 from june.groups.group.external import ExternalGroup
+from june.utils.rng import rng
 
 default_cities_filename = data_path / "input/geography/cities_per_super_area_ew.csv"
 
@@ -91,7 +91,7 @@ class City:
             return
         if person.id in self.internal_commuter_ids:
             internal_station = self.city_stations[
-                randint(0, len(self.city_stations) - 1)
+                rng.integers(0, len(self.city_stations) )
             ]
             return internal_station.get_commute_subgroup()
         else:
@@ -244,7 +244,7 @@ class ExternalCity(ExternalGroup):
             return
         if person.id in self.internal_commuter_ids:
             internal_station = self.city_stations[
-                randint(0, len(self.city_stations) - 1)
+                rng.integers(0, len(self.city_stations) )
             ]
             return internal_station.get_commute_subgroup()
         else:

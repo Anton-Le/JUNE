@@ -1,6 +1,5 @@
 import operator
 from typing import List, Optional, Tuple, Set, TYPE_CHECKING
-from random import random
 import numpy as np
 import datetime
 import yaml
@@ -9,6 +8,8 @@ from pathlib import Path
 
 from june import paths
 from june.utils import read_date
+from june.utils.rng import rng
+
 from .vaccines import Vaccine, Vaccines
 
 logger = logging.getLogger("vaccination")
@@ -347,9 +348,9 @@ class VaccinationCampaigns:
         daily_probability = np.array(daily_probability)
         norm = daily_probability.sum()
         if norm > 0.0:
-            if random() < norm:
+            if rng.random() < norm:
                 daily_probability /= norm
-                campaign = np.random.choice(
+                campaign = rng.choice(
                     campaigns_to_chose_from, p=daily_probability
                 )
                 campaign.vaccinate(person=person, date=date, record=record)

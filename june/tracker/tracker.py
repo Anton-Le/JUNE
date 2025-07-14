@@ -13,6 +13,7 @@ from june.world import World
 import geopy.distance
 
 from june.groups.group import make_subgroups
+from june.utils.rng import rng
 
 warnings.simplefilter(action="ignore", category=pd.errors.PerformanceWarning)
 
@@ -106,7 +107,7 @@ class Tracker:
         self.venues_which = {}
         for spec in locations:
             if len(getattr(self.world, spec).members) > MaxVenueTrackingSize:
-                self.venues_which[spec] = np.random.choice(
+                self.venues_which[spec] = rng.choice(
                     np.arange(0, len(getattr(self.world, spec).members), 1),
                     size=self.MaxVenueTrackingSize,
                     replace=False,
@@ -153,7 +154,7 @@ class Tracker:
 
         """
         f = x % 1
-        if np.random.uniform(0, 1, 1) < f:
+        if rng.uniform(0, 1, 1) < f:
             return int(x) + 1
         else:
             return int(x)
@@ -178,7 +179,7 @@ class Tracker:
         """
         Intersection = np.array(list(set(list_A) & set(list_B)))
         if permute:
-            return list(Intersection[np.random.permutation(len(Intersection))])
+            return list(Intersection[rng.permutation(len(Intersection))])
         else:
             return list(Intersection)
 
@@ -562,10 +563,10 @@ class Tracker:
         """
         if Probabilistic:
             if mean_err != 0:  # Errored input
-                C_i = max(0, np.random.normal(mean, mean_err))
-                C_i = self._random_round(np.random.poisson(C_i))
+                C_i = max(0, rng.normal(mean, mean_err))
+                C_i = self._random_round(rng.poisson(C_i))
             else:  # Error on counts treated as zero
-                C_i = self._random_round(np.random.poisson(mean))
+                C_i = self._random_round(rng.poisson(mean))
             return C_i
         else:
             return self._random_round(mean)
@@ -1873,11 +1874,11 @@ class Tracker:
                 contact_ages = []
 
                 if inside:
-                    contacts_index = np.random.choice(
+                    contacts_index = rng.choice(
                         len(subgroup_people_without), int_contacts, replace=True
                     )
                 else:
-                    contacts_index = np.random.choice(
+                    contacts_index = rng.choice(
                         len(subgroup_people), int_contacts, replace=True
                     )
 

@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import random
 import datetime
 import logging
 from collections import defaultdict
@@ -15,6 +14,7 @@ from june.epidemiology.infection import InfectionSelector
 from june.world import World
 from june.geography import Region, Area, SuperArea
 
+from june.utils.rng import rng
 seed_logger = logging.getLogger("seed")
 
 
@@ -73,8 +73,8 @@ class ExactNumInfectionSeed(InfectionSeed):
             age_ranges.append([int(agemin), int(agemax)])
 
         N_seeded = np.zeros(len(age_ranges), dtype="int")
-        random.seed()
-        for person in random.sample(list(people), len(people)):
+        rng.seed()
+        for person in rng.choice(list(people), len(people), replace=False):
             in_seed_age_range = False
             for j in range(len(age_ranges)):
                 if (
@@ -229,7 +229,7 @@ class ExactNumClusteredInfectionSeed(ExactNumInfectionSeed):
 
         seeded_households = set()
         while total_to_infect > 0:
-            num = random.random() * cum_scores[-1]
+            num = rng.random() * cum_scores[-1]
             idx = np.searchsorted(cum_scores, num)
             household = households[idx]
             if household.id in seeded_households:

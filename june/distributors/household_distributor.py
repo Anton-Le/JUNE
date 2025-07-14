@@ -12,6 +12,7 @@ from june import paths
 from june.demography import Person
 from june.geography import Area
 from june.groups import Household, Households
+from june.utils.rng import rng
 
 logger = logging.getLogger("household_distributor")
 
@@ -848,7 +849,7 @@ class HouseholdDistributor:
             The maximum age the person should have.
         """
         sex = self._random_sex_list.pop()
-        age = np.random.randint(min_age, max_age + 1)
+        age = rng.integers(min_age, max_age + 1)
         if sex == 0:
             person = self._get_closest_person_of_age(
                 men_by_age, women_by_age, age, min_age, max_age
@@ -1620,7 +1621,7 @@ class HouseholdDistributor:
                 people_left_dict[age] += men_by_age[age]
             if age in women_by_age:
                 people_left_dict[age] += women_by_age[age]
-            np.random.shuffle(people_left_dict[age])  # mix men and women
+            rng.shuffle(people_left_dict[age])  # mix men and women
 
         # fill old people first
         for age in range(self.old_min_age, self.old_max_age + 1):
@@ -1639,7 +1640,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = np.random.choice(all_households)
+                        household = rng.choice(all_households)
                     self._add_to_household(household, person, subgroup="old")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1661,7 +1662,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = np.random.choice(all_households)
+                        household = rng.choice(all_households)
                     self._add_to_household(household, person, subgroup="young_adults")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1682,7 +1683,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = np.random.choice(all_households)
+                        household = rng.choice(all_households)
                     self._add_to_household(household, person, subgroup="adults")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1712,7 +1713,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = np.random.choice(all_households)
+                        household = rng.choice(all_households)
                     self._add_to_household(household, person, subgroup="kids")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1733,7 +1734,7 @@ class HouseholdDistributor:
             list2 = [household for household in lis if household.size > 0]
             if not list2:
                 continue
-            household = np.random.choice(list2)
+            household = rng.choice(list2)
             return household
 
     def _find_household_for_nonkid(self, priority_lists):
@@ -1749,5 +1750,5 @@ class HouseholdDistributor:
         for lis in priority_lists:
             if not lis:
                 continue
-            household = np.random.choice(lis)
+            household = rng.choice(lis)
             return household

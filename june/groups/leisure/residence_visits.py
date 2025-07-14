@@ -1,10 +1,10 @@
 import yaml
-from random import shuffle, randint
 import numpy as np
 
 from june.groups.leisure import SocialVenueDistributor
 from june.paths import configs_path
 from june.utils import random_choice_numba
+from june.utils.rng import rng
 
 default_config_filename = configs_path / "defaults/groups/leisure/visits.yaml"
 
@@ -69,11 +69,11 @@ class ResidenceVisitsDistributor(SocialVenueDistributor):
             for household in households_in_super_area:
                 if household.n_residents == 0:
                     continue
-                households_to_link_n = randint(2, 4)
+                households_to_link_n = rng.integers(2, 4 + 1)
                 households_to_visit = []
                 n_linked = 0
                 while n_linked < households_to_link_n:
-                    house_idx = randint(0, len(households_in_super_area) - 1)
+                    house_idx = rng.integers(0, len(households_in_super_area) )
                     house = households_in_super_area[house_idx]
                     if house.id == household.id or not house.residents:
                         continue
@@ -103,7 +103,7 @@ class ResidenceVisitsDistributor(SocialVenueDistributor):
                     for household in area.households
                     if household.type in ["families", "ya_parents", "nokids"]
                 ]
-            shuffle(households_super_area)
+            rng.shuffle(households_super_area)
             for area in super_area.areas:
                 if area.care_home is not None:
                     people_in_care_home = [
@@ -145,7 +145,7 @@ class ResidenceVisitsDistributor(SocialVenueDistributor):
         elif n_candidates == 1:
             group = candidates[0]
         else:
-            group = candidates[randint(0, n_candidates - 1)]
+            group = candidates[rng.integers(0, n_candidates )]
         return group
 
     def get_poisson_parameter(
