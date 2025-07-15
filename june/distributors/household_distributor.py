@@ -1640,7 +1640,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = rng.choice(all_households)
+                        household = rng.choice(all_households, shuffle=False)
                     self._add_to_household(household, person, subgroup="old")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1662,7 +1662,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = rng.choice(all_households)
+                        household = rng.choice(all_households, shuffle=False)
                     self._add_to_household(household, person, subgroup="young_adults")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1683,7 +1683,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = rng.choice(all_households)
+                        household = rng.choice(all_households, shuffle=False)
                     self._add_to_household(household, person, subgroup="adults")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1713,7 +1713,7 @@ class HouseholdDistributor:
                             ]
                         )
                     if household is None:
-                        household = rng.choice(all_households)
+                        household = rng.choice(all_households, shuffle=False)
                     self._add_to_household(household, person, subgroup="kids")
                     if self._check_if_household_is_full(household):
                         self._remove_household_from_all_lists(
@@ -1734,7 +1734,7 @@ class HouseholdDistributor:
             list2 = [household for household in lis if household.size > 0]
             if not list2:
                 continue
-            household = rng.choice(list2)
+            household = rng.choice(list2, shuffle=False)
             return household
 
     def _find_household_for_nonkid(self, priority_lists):
@@ -1750,5 +1750,5 @@ class HouseholdDistributor:
         for lis in priority_lists:
             if not lis:
                 continue
-            household = rng.choice(lis)
+            household = rng.choice(lis, shuffle=False)
             return household

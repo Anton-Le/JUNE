@@ -41,7 +41,7 @@ class University(Group):
     def add(self, person, subgroup="student"):
         if subgroup == "student":
             if person.age not in age_to_years:
-                year = rng.integers(0, len(self.subgroups) )
+                year = rng.integers(0, len(self.subgroups) - 1, endpoint=True)
             else:
                 year = age_to_years[person.age]
             self.subgroups[year].append(person)

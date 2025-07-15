@@ -91,7 +91,7 @@ class City:
             return
         if person.id in self.internal_commuter_ids:
             internal_station = self.city_stations[
-                rng.integers(0, len(self.city_stations) )
+                rng.integers(0, len(self.city_stations) - 1, endpoint=True)
             ]
             return internal_station.get_commute_subgroup()
         else:
@@ -244,7 +244,7 @@ class ExternalCity(ExternalGroup):
             return
         if person.id in self.internal_commuter_ids:
             internal_station = self.city_stations[
-                rng.integers(0, len(self.city_stations) )
+                rng.integers(0, len(self.city_stations) - 1, endpoint=True )
             ]
             return internal_station.get_commute_subgroup()
         else:

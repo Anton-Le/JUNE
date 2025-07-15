@@ -50,7 +50,7 @@ class CompanyDistributor:
                 continue
             if company_dict[worker.sector]:
                 if full_idx[worker.sector] >= len(company_dict[worker.sector]):
-                    idx = rng.integers(0, len(company_dict[worker.sector]) )
+                    idx = rng.integers(0, len(company_dict[worker.sector]) - 1, endpoint=True)
                     company = company_dict[worker.sector][idx]
                 else:
                     company = company_dict[worker.sector][0]

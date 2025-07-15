@@ -50,7 +50,7 @@ class CityStation(Station):
         return len(self.city_transports)
 
     def get_commute_subgroup(self):
-        return self.city_transports[rng.integers(0, self.n_city_transports )][0]
+        return self.city_transports[rng.integers(0, self.n_city_transports -1, endpoint=True)][0]
 
     @property
     def station_type(self):
@@ -71,7 +71,7 @@ class InterCityStation(Station):
         return len(self.inter_city_transports)
 
     def get_commute_subgroup(self):
-        return self.inter_city_transports[rng.integers(0, self.n_inter_city_transports )][
+        return self.inter_city_transports[rng.integers(0, self.n_inter_city_transports - 1, endpoint=True)][
             0
         ]
 
@@ -180,7 +180,7 @@ class ExternalCityStation(ExternalStation):
         return len(self.city_transports)
 
     def get_commute_subgroup(self):
-        group = self.city_transports[rng.integers(0, self.n_city_transports )]
+        group = self.city_transports[rng.integers(0, self.n_city_transports - 1, endpoint=True)]
         return ExternalSubgroup(group=group, subgroup_type=0)
 
 
@@ -198,5 +198,5 @@ class ExternalInterCityStation(ExternalStation):
         return len(self.inter_city_transports)
 
     def get_commute_subgroup(self):
-        group = self.inter_city_transports[rng.integers(0, self.n_inter_city_transports )]
+        group = self.inter_city_transports[rng.integers(0, self.n_inter_city_transports - 1, endpoint=True)]
         return ExternalSubgroup(group=group, subgroup_type=0)

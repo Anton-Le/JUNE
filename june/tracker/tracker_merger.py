@@ -351,7 +351,9 @@ class MergerClass:
         return 1
 
     def VenueUniquePops(self):
-        rng.seed(1234)
+#        rng.seed(1234)
+        BitGen = type(rng.bit_generator)
+        rng.bit_generator.state = BitGen( 12345 ).state
         location_counters = {}
         for sex in self.contact_sexes:
             location_counters[sex] = {}
@@ -412,7 +414,8 @@ class MergerClass:
                     df = pd.DataFrame(location_counters[sex][local])
                     df.to_excel(writer, sheet_name=f"{local}")
 
-        rng.seed(1234)
+        BitGen = type(rng.bit_generator)
+        rng.bit_generator.state = BitGen( 12345 ).state
         location_counters = {}
         for sex in self.contact_sexes:
             location_counters[sex] = {}

@@ -207,7 +207,7 @@ class WorkerDistributor:
         """
         Selects random SuperArea to send a worker to work in
         """
-        idx = rng.integers(0, len(self.super_areas) )
+        idx = rng.integers(0, len(self.super_areas) - 1, endpoint=True)
         self.super_areas.members[idx].add_worker(person)
 
     def _assign_work_sector(self, i: int, person: Person):
@@ -409,6 +409,7 @@ def load_workflow_df(
     wf_df = pd.read_csv(
         workflow_file,
         delimiter=",",
+        delim_whitespace=False,
         skiprows=1,
         usecols=[0, 1, 3, 4],
         names=["super_area", "work_super_area", "n_man", "n_woman"],
@@ -463,8 +464,6 @@ def load_sex_per_sector(
 
     # convert counts to ratios
     # Convert columns to float to avoid dtype incompatibility warnings
-    sector_by_sex_df[m_columns] = sector_by_sex_df[m_columns].astype(float)
-    sector_by_sex_df[f_columns] = sector_by_sex_df[f_columns].astype(float)
     
     sector_by_sex_df.loc[:, m_columns] = sector_by_sex_df.loc[:, m_columns].div(
         sector_by_sex_df[m_columns].sum(axis=1), axis=0

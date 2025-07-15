@@ -409,7 +409,7 @@ class Leisure:
         return 1 - self.P_IsAdult(age)
 
     def AorC(self, age):
-        r = rng.random() #  TODO: Fix
+        r = rng.random(1)[0]
         if r < self.P_IsAdult(age):
             return "Adult"
         else:

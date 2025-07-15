@@ -197,7 +197,7 @@ class Companies(Supergroup):
         for size_bracket, counts in company_sizes.items():
             size_min, size_max = _get_size_brackets(size_bracket)
             sizes = np.concatenate(
-                (sizes, rng.integers(max(size_min, 1), size_max+1, int(counts)))
+                (sizes, rng.integers(max(size_min, 1), size_max, size=int(counts)))
             )
         rng.shuffle(sizes)
         sectors = []

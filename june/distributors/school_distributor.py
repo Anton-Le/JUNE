@@ -258,7 +258,7 @@ class SchoolDistributor:
                     continue
                 # note one school can be primary and secondary.
                 if type(school.sector) != str:
-                    idx = rng.integers(0, 2 + 1)
+                    idx = rng.integers(0, 2)
                     if idx == 0:
                         primary_schools.append(school)
                     else:
@@ -266,7 +266,7 @@ class SchoolDistributor:
                 else:
                     if "primary" in school.sector:
                         if "secondary" in school.sector:
-                            idx = rng.integers(0, 2 + 1)
+                            idx = rng.integers(0, 2)
                             if idx == 0:
                                 primary_schools.append(school)
                             else:
@@ -276,7 +276,7 @@ class SchoolDistributor:
                     elif "secondary" in school.sector:
                         secondary_schools.append(school)
                     else:
-                        idx = rng.integers(0, 2 + 1)
+                        idx = rng.integers(0, 2)
                         if idx == 0:
                             primary_schools.append(school)
                         else:

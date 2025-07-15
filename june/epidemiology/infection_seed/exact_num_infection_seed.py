@@ -73,8 +73,10 @@ class ExactNumInfectionSeed(InfectionSeed):
             age_ranges.append([int(agemin), int(agemax)])
 
         N_seeded = np.zeros(len(age_ranges), dtype="int")
-        rng.seed()
-        for person in rng.choice(list(people), len(people), replace=False):
+        #rng.seed()
+        BitGen = type(rng.bit_generator)
+        rng.bit_generator.state = BitGen( 42 ).state
+        for person in rng.choice(list(people), len(people), replace=False, shuffle=False):
             in_seed_age_range = False
             for j in range(len(age_ranges)):
                 if (

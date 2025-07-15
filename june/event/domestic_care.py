@@ -62,6 +62,7 @@ class DomesticCare(Event):
         for household in world.households:
             if household.household_to_care is not None:
                 household_to_care = household.household_to_care
+                print( type(household.residents) )
                 carers = list(household.residents)
                 rng.shuffle(carers)
                 receives_care = False

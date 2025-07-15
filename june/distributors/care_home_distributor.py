@@ -86,7 +86,7 @@ class CareHomeDistributor:
             available_people += people_by_age[age]
         if not available_people:
             return None
-        chosen_person_idx = rng.integers(0, len(available_people) )
+        chosen_person_idx = rng.integers(0, len(available_people) - 1, endpoint=True)
         chosen_person = available_people[chosen_person_idx]
         people_by_age[chosen_person.age].remove(chosen_person)
         if not people_by_age[chosen_person.age]:
@@ -128,6 +128,7 @@ class CareHomeDistributor:
             ]
             # now we need to choose from each area population which people go to the care home based on
             # the super area statistics. Check who goes first.
+            assert type(areas_with_care_homes) == list, "Wrong input type!"
             rng.shuffle(areas_with_care_homes)
             areas_dicts = [
                 self._create_people_dicts(area) for area in areas_with_care_homes

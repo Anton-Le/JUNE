@@ -144,7 +144,7 @@ class Person(dataobject):
         possible_guardians = [person for person in self.housemates if person.age >= 18]
         if not possible_guardians:
             return None
-        guardian = rng.choice(possible_guardians)
+        guardian = rng.choice(possible_guardians, size=1, replace=False, shuffle=False)
         if (
             guardian.infection is not None and guardian.infection.should_be_in_hospital
         ) or guardian.dead:
