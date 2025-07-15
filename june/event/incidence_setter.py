@@ -35,13 +35,13 @@ class IncidenceSetter(Event):
                 incidence = len(infected_people) / len(people)
                 if incidence > target_incidence:
                     n_to_remove = int((incidence - target_incidence) * len(people))
-                    to_cure = rng.choice(infected_people, size=n_to_remove, replace=False, shuffle=False)
+                    to_cure = rng.choice(infected_people, size=n_to_remove, replace=False, shuffle=False).tolist()
                     for person in to_cure:
                         person.infection = None
                 elif incidence < target_incidence:
                     n_to_add = int((target_incidence - incidence) * len(people))
-                    to_infect = rng.choice( list(people), size=2 * n_to_add, replace=False, shuffle=False)
-                    infected = rng.choice(infected_people, size=2 * n_to_add, replace=True, shuffle=False)
+                    to_infect = rng.choice( list(people), size=2 * n_to_add, replace=False, shuffle=False).tolist()
+                    infected = rng.choice(infected_people, size=2 * n_to_add, replace=True, shuffle=False).tolist()
                     counter = 0
                     for person, infected_ref in zip(to_infect, infected):
                         if person.infected:

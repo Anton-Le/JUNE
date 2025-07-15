@@ -233,7 +233,7 @@ class SocialVenueDistributor:
             return tuple([potential_venues[idx] for idx in range(indices_len)])
         else:
             indices_len = min(len(potential_venues), self.neighbours_to_consider)
-            random_idx_choice = rng.choice(range(len(potential_venues)), size=indices_len, replace=False, shuffle=False)
+            random_idx_choice = rng.choice(range(len(potential_venues)), size=indices_len, replace=False, shuffle=False).tolist()
             return tuple([potential_venues[idx] for idx in random_idx_choice])
 
     def get_leisure_group(self, person):

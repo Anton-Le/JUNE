@@ -76,7 +76,7 @@ class ExactNumInfectionSeed(InfectionSeed):
         #rng.seed()
         BitGen = type(rng.bit_generator)
         rng.bit_generator.state = BitGen( 42 ).state
-        for person in rng.choice(list(people), len(people), replace=False, shuffle=False):
+        for person in rng.choice(list(people), len(people), replace=False, shuffle=False).tolist():
             in_seed_age_range = False
             for j in range(len(age_ranges)):
                 if (
